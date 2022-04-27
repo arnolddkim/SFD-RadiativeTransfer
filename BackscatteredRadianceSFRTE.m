@@ -24,11 +24,6 @@
 
 clear;
 
-%% set the figure parameters
-
-set(0,'defaultaxesfontsize',18,'defaultaxeslinewidth',1.0,...
-      'defaultlinelinewidth',2.0,'defaultpatchlinewidth',1.0); 
-
 %% set the optical properties
 
 albedo = 0.990; % albedo
@@ -37,7 +32,7 @@ nrel   = 1.000; % relative refractive index of the half space
 
 %% set the spatial frequency and wavenumber
 
-f  = 4.0;
+f  = 10.0;
 xk = 2 * pi * f;
 
 %% set the incident direction of the plane wave
@@ -133,7 +128,7 @@ c  = Ah \ b;
 
 Ngrid       = 101;
 muout_grid  = linspace( -1, 0, Ngrid );
-phi_grid    = linspace( pi/2, 3*pi/2, Ngrid );
+phi_grid    = linspace( 0, 2*pi, Ngrid );
 
 % compute meshgrid of angles out of the medium
 
@@ -167,7 +162,7 @@ I = reshape( FresnelT .* I, Ngrid, Ngrid );
 %% compute mu-star_out
 
 t           = linspace( pi/2, 3*pi/2, Ngrid );
-t           = t(2:end-1);
+% t           = t(2:end);
 theta_star  = atan( tan(theta0) ./ cos(t) );
 
 % critical angle
@@ -177,20 +172,32 @@ indx = find( -sin(theta_star) <= 1/nrel );
 t_star      = t(indx);
 mu_star_out = -cos( asin( nrel * sin( theta_star(indx) ) ) );
 
+%% set the figure parameters
+
+set(0,'defaultaxesfontsize',36,'defaultaxeslinewidth',2.0,...
+      'defaultlinelinewidth',2.0,'defaultpatchlinewidth',2.0); 
+
 %% plot the result
 
-figure(6)
-pcolor( phi_grid, muout_grid, abs( I )' );
-xticks([pi/2 3*pi/4 pi 5*pi/4 3*pi/2]);
-xticklabels({'$\pi/2$','$3\pi/4$','$\pi$','$5\pi/4$','$3\pi/2$'});
-set(gca,'TickLabelInterpreter', 'latex')
+Iplot = log10( abs( I )' / max(abs(I(:))) );
+
+figure(16)
+[c,h]=contourf( phi_grid, muout_grid, Iplot, (-2.2:0.2:0), 'w-', 'LineWidth', 2 );
+% clabel(c,h,'LabelSpacing',72,'Color','w','FontWeight','bold');
+caxis([-2.2 0])
+% pcolor( phi_grid, muout_grid, Iplot );
+xticks([0 pi/2 pi 3*pi/2 2*pi]);
+% xticklabels({'0', '\pi/2', '\pi','$3\pi/2$', '$2\pi$' });
+xticklabels({'0', '', '\pi', '', '2\pi' });
+set(gca,'TickLabelInterpreter', 'tex' )
 shading flat;
-colorbar;
+% colorbar;
 hold on;
-plot( t_star, mu_star_out, 'r:' );
+plot( t_star, mu_star_out, 'r:', 'LineWidth', 3 );
 hold off;
 xlabel( '$\varphi$', 'Interpreter', 'LaTeX' );
-ylabel( '$\mu_{\mbox{out}}$', 'Interpreter', 'LaTeX' );
+ylabel( '$\mu$', 'Interpreter', 'LaTeX' );
+% ylabel( '$\mu_{\mbox{out}}$', 'Interpreter', 'LaTeX' );
 % hYLabel = get(gca,'YLabel');
 % set(hYLabel,'rotation',0,'VerticalAlignment','middle')
 % axis tight
