@@ -1,5 +1,5 @@
 # SFD-RadiativeTransfer
-Matlab codes to solve the RTE in the spatial frequency domain
+Matlab codes to solve the RTE in the spatial frequency domain. This code is used to generate the numerical results contained in the manuscript entitled, "Radiance backscattered by a strongly scattering medium in the high spatial frequency limit" by Boaz Ilan, Arnold D. Kim, and Vasan Venugopalan.
 
 The main driver is BackscatteredRadianceSFRTE.m. This code solves the 3D radiative transfer equation (RTE) in the spatial frequency domain for a fixed spatial frequency.
 
